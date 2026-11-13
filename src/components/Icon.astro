@@ -1,0 +1,42 @@
+---
+/**
+ * Small line icons. Drawn as SVG because the arrow characters (→ ↗ ←) are
+ * outside the Latin font subset and would fall back to a system font.
+ */
+interface Props {
+  name: 'arrow-right' | 'arrow-left' | 'arrow-up-right';
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 16, class: className } = Astro.props;
+
+const paths: Record<Props['name'], string> = {
+  'arrow-right': 'M3 8h10M9 4l4 4-4 4',
+  'arrow-left': 'M13 8H3M7 4L3 8l4 4',
+  'arrow-up-right': 'M4.5 11.5l7-7M5.5 4.5h6v6',
+};
+---
+
+<svg
+  class:list={['icon', className]}
+  width={size}
+  height={size}
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="square"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={paths[name]}></path>
+</svg>
+
+<style>
+  .icon {
+    display: inline-block;
+    flex: none;
+    vertical-align: -0.125em;
+  }
+</style>

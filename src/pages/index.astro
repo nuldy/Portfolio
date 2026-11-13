@@ -1,0 +1,481 @@
+---
+/**
+ * Home: hero, work, skills, about, experience, contact.
+ * Phase 1 layout: simple and semantic. The visual design comes in Phase 2.
+ */
+import { Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import ExternalLink from '../components/ExternalLink.astro';
+import Icon from '../components/Icon.astro';
+import { experience } from '../data/experience';
+import { site } from '../data/site';
+import { skills } from '../data/skills';
+import Base from '../layouts/Base.astro';
+import { url, workUrl } from '../lib/url';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const pad = (n: number) => String(n).padStart(2, '0');
+const mailto = `mailto:${site.email}`;
+---
+
+<Base title={`${site.name} · Developer with a finance, accounting and tax background`} description={site.description}>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero__inner">
+      <h1 id="hero-title">{site.hero.title}</h1>
+      <p class="hero__intro">{site.hero.intro}</p>
+      <div class="hero__actions">
+        <a class="button" href={url('#work')}>See selected work</a>
+        <a class="hero__mail" href={mailto}>Email me <Icon name="arrow-right" /></a>
+      </div>
+      {site.availability.open && <p class="label hero__status">{site.availability.text}</p>}
+    </div>
+  </section>
+
+  <section id="work" class="section" aria-labelledby="work-title">
+    <div class="container">
+      <h2 id="work-title" class="section-title">
+        <span class="label section-index" aria-hidden="true">01</span>Selected work
+      </h2>
+      <ol role="list" class="work-list">
+        {
+          projects.map((project, i) => (
+            <li class="work-row">
+              <div class="work-row__text">
+                <span class="label text-muted" aria-hidden="true">
+                  {pad(i + 1)}
+                </span>
+                <h3>
+                  <a class="work-row__link" href={workUrl(project.id)}>
+                    {project.data.title}
+                    <span class="visually-hidden">, read case study</span>
+                  </a>
+                </h3>
+                <p>{project.data.summary}</p>
+                <p class="label text-muted">
+                  {[project.data.role, ...project.data.disciplines.slice(0, 2), project.data.year]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </p>
+                <span class="work-row__cta" aria-hidden="true">
+                  Read case study <Icon name="arrow-right" />
+                </span>
+              </div>
+              <Picture
+                pictureAttributes={{ class: 'work-row__media' }}
+                class="work-row__image"
+                src={project.data.cover}
+                alt={project.data.coverAlt}
+                formats={['avif']}
+                fallbackFormat="webp"
+                widths={[480, 768, 1080, 1440]}
+                sizes="(min-width: 1024px) 580px, (min-width: 768px) 50vw, calc(100vw - 40px)"
+                loading="lazy"
+                decoding="async"
+              />
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section id="skills" class="section" aria-labelledby="skills-title">
+    <div class="container">
+      <h2 id="skills-title" class="section-title">
+        <span class="label section-index" aria-hidden="true">02</span>What I work with
+      </h2>
+      <ol role="list" class="skill-list">
+        {
+          skills.map((group, i) => (
+            <li class="skill-row">
+              <span class="label text-muted" aria-hidden="true">
+                {pad(i + 1)}
+              </span>
+              <div>
+                <h3>{group.name}</h3>
+                <p>{group.summary}</p>
+                {group.tools.length > 0 && (
+                  <p class="mono text-small text-muted">
+                    <span class="visually-hidden">Tools: </span>
+                    {group.tools.join(' · ')}
+                  </p>
+                )}
+                <p class="text-small">
+                  Evidence:{' '}
+                  {group.evidence.map((item, j) => (
+                    <>
+                      {j > 0 && ', '}
+                      <a href={item.href}>{item.label}</a>
+                    </>
+                  ))}
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section id="about" class="section" aria-labelledby="about-title">
+    <div class="container about">
+      <h2 id="about-title" class="section-title">
+        <span class="label section-index" aria-hidden="true">03</span>About
+      </h2>
+      <div class="about__text">
+        {site.about.paragraphs.map((text) => <p>{text}</p>)}
+      </div>
+      <dl class="facts">
+        <div>
+          <dt class="label text-muted">Based in</dt>
+          <dd>{site.location}</dd>
+        </div>
+        <div>
+          <dt class="label text-muted">Now</dt>
+          <dd>{experience[0].role}, {experience[0].place}</dd>
+        </div>
+        <div>
+          <dt class="label text-muted">Education</dt>
+          <dd>S.Kom., Computer Science, Bina Nusantara University, 2025</dd>
+        </div>
+        {
+          site.availability.open && (
+            <div>
+              <dt class="label text-muted">Status</dt>
+              <dd>{site.availability.text}</dd>
+            </div>
+          )
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section id="experience" class="section" aria-labelledby="experience-title">
+    <div class="container">
+      <h2 id="experience-title" class="section-title">
+        <span class="label section-index" aria-hidden="true">04</span>Experience
+      </h2>
+      <ol role="list" class="experience-list">
+        {
+          experience.map((item) => (
+            <li class="experience-row">
+              <p class="mono text-small text-muted experience-row__period">{item.period}</p>
+              <div>
+                <h3 class="experience-row__role">
+                  {item.role}
+                  <span class="experience-row__place">{item.place}</span>
+                </h3>
+                <p class="text-muted">{item.summary}</p>
+                {item.tools && (
+                  <p class="mono text-small text-muted">
+                    <span class="visually-hidden">Tools: </span>
+                    {item.tools.join(' · ')}
+                  </p>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section id="contact" class="section" aria-labelledby="contact-title">
+    <div class="container">
+      <h2 id="contact-title" class="section-title">
+        <span class="label section-index" aria-hidden="true">05</span>Contact
+      </h2>
+      <p class="contact__lead">{site.contact.lead}</p>
+      <a class="contact__email" href={mailto}>{site.email}</a>
+      <ul role="list" class="contact__links">
+        <li>
+          <span class="label text-muted">WhatsApp</span>
+          <ExternalLink href={site.whatsapp.url}>{site.whatsapp.label}</ExternalLink>
+        </li>
+        {
+          site.social.map((link) => (
+            <li>
+              <span class="label text-muted">{link.label}</span>
+              <ExternalLink href={link.url}>{link.url.replace(/^https:\/\/(www\.)?/, '').replace(/\/$/, '')}</ExternalLink>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Shared section rhythm */
+  .section {
+    padding-top: var(--space-section);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-bottom: var(--space-7);
+  }
+
+  .section-index {
+    color: var(--ink-2);
+  }
+
+  /* Hero */
+  .hero__inner {
+    display: grid;
+    align-content: center;
+    gap: var(--space-5);
+    min-height: calc(100svh - var(--header-height) - var(--space-8));
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .hero h1 {
+    max-width: 16ch;
+  }
+
+  .hero__intro {
+    font-size: 1.1875rem;
+    color: var(--ink-2);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-6);
+    margin-top: var(--space-2);
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: var(--space-2) var(--space-5);
+    border-radius: var(--radius-max);
+    background-color: var(--ink);
+    color: var(--paper);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .button:hover {
+    background-color: var(--ink-2);
+  }
+
+  .hero__mail {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .hero__status {
+    color: var(--ink-2);
+  }
+
+  /* Work */
+  .work-list {
+    border-top: 1px solid var(--hairline);
+  }
+
+  .work-row {
+    position: relative;
+    display: grid;
+    gap: var(--space-5);
+    padding-block: var(--space-7);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .work-row__text {
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+  }
+
+  .work-row__media {
+    order: -1;
+  }
+
+  .work-row__image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius-image);
+    background-color: var(--paper-2);
+  }
+
+  .work-row__link {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  /* The whole row is the link's hit area. */
+  .work-row__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .work-row__link:focus-visible {
+    outline: none;
+  }
+
+  .work-row:has(.work-row__link:focus-visible) {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+  }
+
+  .work-row__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--bronze);
+    font-weight: 500;
+  }
+
+  .work-row:hover .work-row__cta,
+  .work-row:hover .work-row__link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  @media (min-width: 768px) {
+    .work-row {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-7);
+      align-items: center;
+    }
+
+    .work-row:nth-child(odd) .work-row__media {
+      order: 1;
+    }
+  }
+
+  /* Skills */
+  .skill-list,
+  .experience-list {
+    border-top: 1px solid var(--hairline);
+  }
+
+  .skill-row,
+  .experience-row {
+    display: grid;
+    gap: var(--space-2) var(--space-5);
+    padding-block: var(--space-6);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .skill-row > div {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .skill-row {
+      grid-template-columns: 4rem 1fr;
+    }
+
+    .experience-row {
+      grid-template-columns: 10rem 1fr;
+    }
+  }
+
+  /* About */
+  .about {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .about .section-title {
+    margin-bottom: 0;
+  }
+
+  .about__text {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .facts {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+  }
+
+  .facts dd {
+    margin: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .about {
+      grid-template-columns: 2fr 1fr;
+      column-gap: var(--space-9);
+    }
+
+    .about .section-title {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* Experience */
+  .experience-row__period {
+    padding-top: 0.2em;
+  }
+
+  .experience-row__role {
+    font-size: var(--text-body);
+    line-height: var(--leading-small);
+    font-stretch: 100%;
+  }
+
+  .experience-row__place {
+    display: block;
+    color: var(--ink-2);
+    font-weight: 400;
+  }
+
+  .experience-row > div {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  /* Contact */
+  .contact__lead {
+    font-size: 1.1875rem;
+  }
+
+  .contact__email {
+    display: inline-block;
+    margin-block: var(--space-5) var(--space-7);
+    color: var(--ink);
+    font-size: var(--text-h2);
+    line-height: var(--leading-h2);
+    font-weight: 600;
+    font-stretch: 85%;
+    overflow-wrap: anywhere;
+  }
+
+  .contact__links {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .contact__links li {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  @media (min-width: 768px) {
+    .contact__links {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-5);
+    }
+  }
+</style>

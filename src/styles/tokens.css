@@ -1,0 +1,100 @@
+/*
+ * Design tokens. Values and contrast ratios: docs/REDESIGN-PLAN.md, section 6.
+ *
+ * Theme logic:
+ *   - No JS: follows the system through prefers-color-scheme.
+ *   - Saved choice: the inline <head> script sets html[data-theme] before
+ *     first paint, which overrides the system.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Colour: light */
+  --paper: #f5efe4;
+  --paper-2: #ebe2d1;
+  --ink: #1a1714; /* 15.60 on paper */
+  --ink-2: #5a5248; /* 6.71 */
+  --bronze: #7d581c; /* 5.59; links and text accents */
+  --blueprint: #2b4c7e; /* 7.53; annotation lines and labels */
+  --rule: #857a69; /* 3.68; borders of interactive components */
+  --hairline: #c9bda8; /* decorative only */
+  --bronze-bright: #b8893c; /* decorative only, never text */
+
+  /* Type (font families come from Astro's <Font>: --font-sans, --font-mono) */
+  --text-display: clamp(2.5rem, 1.6rem + 4.5vw, 5.5rem);
+  --text-h2: clamp(1.75rem, 1.3rem + 2vw, 3rem);
+  --text-h3: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-body: 1.0625rem;
+  --text-small: 0.875rem;
+  --text-label: 0.75rem;
+  --leading-display: 0.98;
+  --leading-h2: 1.05;
+  --leading-h3: 1.2;
+  --leading-body: 1.6;
+  --leading-small: 1.5;
+  --leading-label: 1.4;
+  --tracking-label: 0.06em;
+  --measure: 65ch;
+
+  /* Space (px scale: 4 8 12 16 24 32 48 64 96 128 160) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --space-11: 10rem;
+  --space-section: clamp(64px, 10vw, 160px);
+
+  /* Layout */
+  --page-max: 1200px;
+  --gutter: 24px;
+  --margin: 20px;
+  --header-height: 3.5rem;
+
+  /* Shape */
+  --radius-image: 2px;
+  --radius-max: 4px;
+
+  /* Motion */
+  --dur-1: 120ms;
+  --dur-2: 240ms;
+  --dur-3: 480ms;
+  --dur-4: 800ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --paper: #14120f;
+    --paper-2: #1e1b17;
+    --ink: #f2ebdd; /* 15.76 on paper */
+    --ink-2: #b9af9f; /* 8.63 */
+    --bronze: #d2a45a; /* 8.19 */
+    --blueprint: #8fb0e0; /* 8.42 */
+    --rule: #857c6d; /* 4.54 */
+    --hairline: #3a342c;
+    --bronze-bright: #9c7739;
+  }
+}
+
+/* Same values as above, for a saved "dark" choice on a light system. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #14120f;
+  --paper-2: #1e1b17;
+  --ink: #f2ebdd;
+  --ink-2: #b9af9f;
+  --bronze: #d2a45a;
+  --blueprint: #8fb0e0;
+  --rule: #857c6d;
+  --hairline: #3a342c;
+  --bronze-bright: #9c7739;
+}

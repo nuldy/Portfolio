@@ -1,0 +1,36 @@
+---
+/**
+ * Title, description, canonical URL and social cards for one page.
+ * Open Graph images and JSON-LD are added in Phase 3.
+ */
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  type?: 'website' | 'article';
+  /** Absolute URL of a 1200x630 image. */
+  image?: string;
+  imageAlt?: string;
+}
+
+const { title, description, type = 'website', image, imageAlt } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content="en_US" />
+{image && <meta property="og:image" content={image} />}
+{image && imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+
+<meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />

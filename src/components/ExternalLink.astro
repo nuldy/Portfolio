@@ -1,0 +1,28 @@
+---
+/**
+ * A link to another site. Opens in a new tab, shows ↗, and tells screen
+ * reader users where it goes.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  href: string;
+  class?: string;
+}
+
+const { href, class: className } = Astro.props;
+---
+
+<a href={href} class:list={['external', className]} target="_blank" rel="noopener noreferrer"
+  ><slot /><Icon name="arrow-up-right" size={14} /><span class="visually-hidden"
+    >{' (opens in a new tab)'}</span
+  ></a
+>
+
+<style>
+  .external {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.2em;
+  }
+</style>

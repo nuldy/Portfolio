@@ -1,0 +1,119 @@
+---
+/**
+ * One row, no menu button at any width. On narrow screens the links wrap
+ * under the name. Sticky with a solid background from 1024px.
+ */
+import { site } from '../data/site';
+import { url } from '../lib/url';
+import ThemeToggle from './ThemeToggle.astro';
+
+const isHome = Astro.url.pathname === url();
+
+const links = [
+  { label: 'Work', href: url('#work') },
+  { label: 'About', href: url('#about') },
+  { label: 'Contact', href: url('#contact') },
+];
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="wordmark" href={url()} aria-current={isHome ? 'page' : undefined}>{site.name}</a>
+    <div class="site-header__end">
+      <nav aria-label="Main">
+        <ul role="list" class="nav-list">
+          {
+            links.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <ThemeToggle />
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background-color: var(--paper);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .site-header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: var(--space-5);
+    min-height: var(--header-height);
+  }
+
+  .wordmark {
+    padding-block: var(--space-3);
+    color: var(--ink);
+    font-weight: 600;
+    font-stretch: 85%;
+    font-size: 1.125rem;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+
+  .site-header__end {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .nav-list {
+    display: flex;
+    gap: var(--space-1);
+  }
+
+  .nav-list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: var(--space-2);
+    color: var(--ink);
+    font-size: var(--text-small);
+    text-decoration: none;
+  }
+
+  .nav-list a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+
+  @media (max-width: 479px) {
+    .site-header__end {
+      width: 100%;
+      justify-content: space-between;
+      margin-top: calc(-1 * var(--space-2));
+    }
+
+    .nav-list {
+      margin-inline-start: calc(-1 * var(--space-2));
+    }
+  }
+
+  @media (min-width: 768px) {
+    .nav-list {
+      gap: var(--space-3);
+    }
+
+    .nav-list a {
+      font-size: var(--text-body);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+  }
+</style>

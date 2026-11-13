@@ -1,0 +1,71 @@
+/* Type scale from docs/REDESIGN-PLAN.md, section 6. */
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-weight: 400;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  font-stretch: 85%;
+  text-wrap: balance;
+  color: var(--ink);
+}
+
+h1 {
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: var(--text-h2);
+  line-height: var(--leading-h2);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: var(--text-h3);
+  line-height: var(--leading-h3);
+}
+
+p,
+li,
+dd {
+  text-wrap: pretty;
+}
+
+p {
+  max-width: var(--measure);
+}
+
+small,
+.text-small {
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+
+.text-muted {
+  color: var(--ink-2);
+}
+
+/* Mono label: annotations, metadata, section numbers. */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--leading-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}

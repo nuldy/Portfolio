@@ -1,0 +1,73 @@
+---
+/**
+ * Page shell: <head>, skip link, header, <main>, footer.
+ * `lang` is a prop so an Indonesian version can reuse this layout later.
+ */
+import { Font } from 'astro:assets';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Seo from '../components/Seo.astro';
+import SkipLink from '../components/SkipLink.astro';
+import { THEME_COLORS, THEME_KEY } from '../lib/theme';
+import { url } from '../lib/url';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/typography.css';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: string;
+  type?: 'website' | 'article';
+  image?: string;
+  imageAlt?: string;
+}
+
+const { lang = 'en', ...seo } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content={THEME_COLORS.light} media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content={THEME_COLORS.dark} media="(prefers-color-scheme: dark)" />
+
+    <!-- Apply a saved theme before first paint. Without JS, CSS follows the system. -->
+    <script is:inline define:vars={{ key: THEME_KEY, colors: THEME_COLORS }}>
+      try {
+        var saved = localStorage.getItem(key);
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.dataset.theme = saved;
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+            meta.setAttribute('content', colors[saved]);
+          });
+        }
+      } catch (e) {}
+    </script>
+
+    <Font cssVariable="--font-sans" preload />
+    <Font cssVariable="--font-mono" />
+
+    <Seo {...seo} />
+
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={url('apple-touch-icon.png')} />
+    <link rel="sitemap" href={url('sitemap-index.xml')} />
+  </head>
+  <body>
+    <SkipLink />
+    <Header />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  main:focus {
+    outline: none;
+  }
+</style>

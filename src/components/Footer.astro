@@ -1,0 +1,28 @@
+---
+/** Copyright line. The colophon (fonts, tools, last update) arrives in Phase 2. */
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p class="text-small text-muted">© {year} {site.name}</p>
+    <p class="text-small text-muted">{site.location}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-section);
+    border-top: 1px solid var(--hairline);
+  }
+
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-5);
+    padding-block: var(--space-6);
+  }
+</style>

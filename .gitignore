@@ -1,0 +1,19 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# lighthouse ci reports
+.lighthouseci/
+
+# environment and platform files
+.env
+.env.*
+.vercel/
+
+# logs and OS files
+npm-debug.log*
+.DS_Store
+Thumbs.db
